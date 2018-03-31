@@ -2,6 +2,7 @@ package fr.neamar.kiss.searcher;
 
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import java.util.HashMap;
 import java.util.List;
@@ -62,6 +63,7 @@ public class QuerySearcher extends Searcher {
      */
     @Override
     protected Void doInBackground(Void... voids) {
+        long startTime = System.nanoTime();
         MainActivity activity = activityWeakReference.get();
         if (activity == null)
             return null;
@@ -75,6 +77,10 @@ public class QuerySearcher extends Searcher {
 
         // Request results via "addResult"
         KissApplication.getApplication(activity).getDataHandler().requestResults(query, this);
+
+        long duration = (System.nanoTime() - startTime) / 1000;
+        Log.v("Timing", "Time to run query `" + query + "` to completion: " + duration + "ms");
+
         return null;
     }
 

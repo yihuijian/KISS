@@ -1,11 +1,15 @@
 package fr.neamar.kiss.androidTest;
 
 import android.test.suitebuilder.annotation.LargeTest;
+import android.view.View;
+
+import org.hamcrest.Matcher;
 
 import fr.neamar.kiss.R;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -21,6 +25,32 @@ public class MainActivityTest extends AbstractMainActivityTest {
 
     public void testHintDisplayed() {
         onView(withId(R.id.searchEditText)).check(matches(withHint(R.string.ui_search_hint)));
+    }
+
+    public void testPerf() {
+        Matcher<View> s = withId(R.id.searchEditText);
+
+        for (int i = 0; i < 500; i++) {
+            try {
+                onView(s).perform(replaceText("a"));
+                Thread.sleep(50);
+                onView(s).perform(replaceText("an"));
+                Thread.sleep(50);
+                onView(s).perform(replaceText("ant"));
+                Thread.sleep(50);
+                onView(s).perform(replaceText("anto"));
+                Thread.sleep(50);
+                onView(s).perform(replaceText("antoi"));
+                Thread.sleep(50);
+                onView(s).perform(replaceText("antoin"));
+                Thread.sleep(50);
+                onView(s).perform(replaceText("antoine"));
+                Thread.sleep(50);
+                onView(s).perform(replaceText(""));
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void testCanTypeTextIntoSearchBox() {

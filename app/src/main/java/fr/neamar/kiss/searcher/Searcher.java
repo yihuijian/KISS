@@ -4,7 +4,6 @@ package fr.neamar.kiss.searcher;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.CallSuper;
-import android.util.Log;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -107,7 +106,7 @@ public abstract class Searcher extends AsyncTask<Void, Result, Void> {
         activity.resetTask();
 
         long time = System.currentTimeMillis() - start;
-        Log.v("Timing", "Time to run query `" + query + "` to completion: " + time + "ms");
+        // Log.v("Timing", "Time to run query `" + query + "` to completion: " + time + "ms");
     }
 
     public interface DataObserver {
