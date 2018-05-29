@@ -3,6 +3,7 @@ package fr.neamar.kiss.adapter;
 import android.content.Context;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -187,6 +188,11 @@ public class RecordAdapter extends BaseAdapter implements SectionIndexer {
         Set<String> sectionLetters = alphaIndexer.keySet();
         ArrayList<String> sectionList = new ArrayList<>(sectionLetters);
         Collections.sort(sectionList);
+
+        Log.e("malnvenshorn", alphaIndexer.toString());
+        Log.e("malnvenshorn", sectionLetters.toString());
+        Log.e("malnvenshorn", sectionList.toString());
+
         // We're displaying from A to Z, everything needs to be reversed
         Collections.reverse(sectionList);
         sections = new String[sectionList.size()];
@@ -200,6 +206,7 @@ public class RecordAdapter extends BaseAdapter implements SectionIndexer {
 
     @Override
     public int getPositionForSection(int sectionIndex) {
+        Log.e("malnvenshorn", "Getting section " + sectionIndex + " / " + sections.length);
         return alphaIndexer.get(sections[sectionIndex]);
     }
 
