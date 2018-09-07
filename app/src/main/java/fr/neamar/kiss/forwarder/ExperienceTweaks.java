@@ -15,6 +15,7 @@ import java.lang.reflect.Method;
 
 import fr.neamar.kiss.MainActivity;
 import fr.neamar.kiss.R;
+import fr.neamar.kiss.ScreenLockActivity;
 import fr.neamar.kiss.searcher.HistorySearcher;
 import fr.neamar.kiss.searcher.NullSearcher;
 
@@ -67,6 +68,7 @@ class ExperienceTweaks extends Forwarder {
         gd = new GestureDetector(mainActivity, new GestureDetector.SimpleOnGestureListener() {
             @Override
             public boolean onSingleTapUp(MotionEvent e) {
+                ScreenLockActivity.startTimeout(mainActivity);
                 // if minimalistic mode is enabled,
                 // and we want to display history on touch
                 if (isMinimalisticModeEnabled() && prefs.getBoolean("history-onclick", false)) {
