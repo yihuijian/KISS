@@ -36,6 +36,7 @@ import fr.neamar.kiss.dataprovider.SearchProvider;
 import fr.neamar.kiss.dataprovider.ShortcutsProvider;
 import fr.neamar.kiss.dataprovider.simpleprovider.CalculatorProvider;
 import fr.neamar.kiss.dataprovider.simpleprovider.PhoneProvider;
+import fr.neamar.kiss.dataprovider.simpleprovider.TagsProvider;
 import fr.neamar.kiss.db.DBHelper;
 import fr.neamar.kiss.db.ShortcutRecord;
 import fr.neamar.kiss.db.ValuedHistoryRecord;
@@ -110,6 +111,10 @@ public class DataHandler extends BroadcastReceiver
         ProviderEntry searchEntry = new ProviderEntry();
         searchEntry.provider = new SearchProvider(context);
         this.providers.put("search", searchEntry);
+
+        ProviderEntry tagsEntry = new ProviderEntry();
+        tagsEntry.provider = new TagsProvider();
+        this.providers.put("tags", tagsEntry);
     }
 
     @Override
