@@ -6,16 +6,16 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.text.Layout;
-import android.text.StaticLayout;
 import android.text.TextPaint;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+
 import fr.neamar.kiss.MainActivity;
 import fr.neamar.kiss.R;
 import fr.neamar.kiss.pojo.TagDummyPojo;
@@ -57,24 +57,31 @@ public class TagDummyResult extends Result {
         TextPaint paint = new TextPaint();
         paint.setFlags(Paint.ANTI_ALIAS_FLAG);
         paint.setTextSize(.6f * height);
-        StaticLayout staticLayout;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            staticLayout = StaticLayout.Builder
-                    .obtain(pojo.getName(), 0, 1, paint, canvas.getWidth())
-                    .setAlignment(Layout.Alignment.ALIGN_CENTER)
-                    .build();
-        } else {
-            staticLayout = new StaticLayout(pojo.getName(), 0, 1, paint, canvas.getWidth(), Layout.Alignment.ALIGN_CENTER, 1f, 0f, true);
-        }
+
+        RectF rectF = new RectF(0, 0, width, height);
 
         // draw a white rounded background
         paint.setColor(0xFFffffff);
-        canvas.drawRoundRect(new RectF(0, 0, width, height), width / 2.4f, height / 2.4f, paint);
+        canvas.drawRoundRect(rectF, width / 2.4f, height / 2.4f, paint);
 
         // write text with "transparent" (create a hole in the background)
         paint.setColor(0);
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
-        staticLayout.draw(canvas);
+
+        // draw the letter in the center
+        Rect b = new Rect();
+        paint.getTextBounds(pojo.getName(), 0, 1, b);
+        canvas.drawText(pojo.getName(), 0, 1, width / 2.f - b.centerX(), height / 2.f - b.centerY(), paint);
+
+//        rectF.set(b);
+//        rectF.offset(width / 2.f - rectF.centerX(), height / 2.f - rectF.centerY());
+//        // pad the rectF so we don't touch the letter
+//        rectF.inset(rectF.width() * -.3f, rectF.height() * -.4f);
+//
+//        // stroke a rect with the bounding of the letter
+//        paint.setStyle(Paint.Style.STROKE);
+//        paint.setStrokeWidth(1.f * context.getResources().getDisplayMetrics().density);
+//        canvas.drawRoundRect(rectF, rectF.width() / 2.4f, rectF.height() / 2.4f, paint);
 
         // keep a reference to the drawable in case we need it again
         mDrawable = new BitmapDrawable(bitmap);
