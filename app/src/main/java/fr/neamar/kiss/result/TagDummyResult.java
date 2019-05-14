@@ -12,6 +12,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.text.TextPaint;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -22,6 +23,7 @@ import fr.neamar.kiss.pojo.TagDummyPojo;
 import fr.neamar.kiss.utils.FuzzyScore;
 
 public class TagDummyResult extends Result {
+    private static final String TAG = TagDummyResult.class.getSimpleName();
     private BitmapDrawable mDrawable = null;
 
     TagDummyResult(@NonNull TagDummyPojo pojo) {
@@ -65,6 +67,7 @@ public class TagDummyResult extends Result {
         canvas.drawRoundRect(rectF, width / 2.4f, height / 2.4f, paint);
 
         int codepoint = pojo.getName().codePointAt(0);
+        String glyph = new String(Character.toChars(codepoint));
         // If the codepoint glyph is an image we can't use SRC_IN to draw it.
         boolean drawAsHole = true;
         Character.UnicodeBlock block = null;
@@ -74,11 +77,22 @@ public class TagDummyResult extends Result {
         }
         if (block == null)
             drawAsHole = false;
+        else if ("DINGBATS".equals(block.toString()))
+            drawAsHole = false;
         else if ("EMOTICONS".equals(block.toString()))
+            drawAsHole = false;
+        else if ("MISCELLANEOUS_SYMBOLS".equals(block.toString()))
             drawAsHole = false;
         else if ("MISCELLANEOUS_SYMBOLS_AND_PICTOGRAPHS".equals(block.toString()))
             drawAsHole = false;
-        String glyph = new String(Character.toChars(codepoint));
+        else if ("SUPPLEMENTAL_SYMBOLS_AND_PICTOGRAPHS".equals(block.toString()))
+            drawAsHole = false;
+        else if ("TRANSPORT_AND_MAP_SYMBOLS".equals(block.toString()))
+            drawAsHole = false;
+        else if (!"BASIC_LATIN".equals(block.toString())) {
+            // log untested glyphs
+            Log.d(TAG, "Codepoint " + codepoint + " with glyph " + glyph + " is in block " + block);
+        }
         // we can't draw images (emoticons and symbols) using SRC_IN with transparent color, the result is a square
         if (drawAsHole) {
             // write text with "transparent" (create a hole in the background)
