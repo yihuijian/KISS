@@ -10,7 +10,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
+import android.preference.PreferenceManager;
 import android.text.TextPaint;
 import android.util.Log;
 import android.view.View;
@@ -38,21 +38,10 @@ public class TagDummyResult extends Result {
         if (mDrawable != null)
             return mDrawable;
 
-        Drawable drawable;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-            drawable = context.getDrawable(R.drawable.ic_launcher_white);
-        else
-            drawable = context.getResources().getDrawable(R.drawable.ic_launcher_white);
+        boolean largeSearchBar = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("large-search-bar", false);
+        int barSize = context.getResources().getDimensionPixelSize(largeSearchBar ? R.dimen.large_bar_height : R.dimen.bar_height);
 
-        // the drawable should be the same size as the launcher icon
-        int width = 10;
-        int height = 10;
-        if (drawable != null) {
-            int intrinsicWidth = drawable.getIntrinsicWidth();
-            int intrinsicHeight = drawable.getIntrinsicHeight();
-            width = intrinsicWidth >= 0 ? intrinsicWidth : width;
-            height = intrinsicHeight >= 0 ? intrinsicHeight : height;
-        }
+        int width, height = width = barSize;
 
         // create a canvas from a bitmap
         Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
@@ -64,6 +53,7 @@ public class TagDummyResult extends Result {
         paint.setTextSize(.6f * height);
 
         RectF rectF = new RectF(0, 0, width, height);
+        rectF.inset(1.f, 1.f);
 
         // draw a white rounded background
         paint.setColor(0xFFffffff);
