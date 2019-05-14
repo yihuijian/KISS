@@ -61,12 +61,11 @@ public class SettingsActivity extends PreferenceActivity implements
     /**
      * Get tags that should be in the favorites bar
      *
-     * @param prefs   the preferences we'll search into
-     * @param context to get the data handler with the actual favorites
-     * @return merge what we find in the preferences with what we find in DataHandler
+     * @param  context to get the data handler with the actual favorites
+     * @return what we find in DataHandler
      */
     @NonNull
-    private static Set<String> getFavTags(SharedPreferences prefs, Context context) {
+    private static Set<String> getFavTags(Context context) {
         ArrayList<Pojo> favoritesPojo = KissApplication.getApplication(context).getDataHandler()
                 .getFavorites();
         Set<String> set = new HashSet<>();
@@ -74,9 +73,6 @@ public class SettingsActivity extends PreferenceActivity implements
             if (pojo instanceof TagDummyPojo)
                 set.add(pojo.getName());
         }
-        Set<String> prefFavTags = prefs.getStringSet("pref-fav-tags-list", null);
-        if (prefFavTags != null)
-            set.addAll(prefFavTags);
         return set;
     }
 
@@ -408,7 +404,7 @@ public class SettingsActivity extends PreferenceActivity implements
         }
 
         addHiddenTagsTogglesInformation(prefs);
-        addTagsFavInformation(prefs);
+        addTagsFavInformation();
     }
 
     @Override
@@ -547,8 +543,8 @@ public class SettingsActivity extends PreferenceActivity implements
         }
     }
 
-    private void addTagsFavInformation(SharedPreferences prefs) {
-        Set<String> favTags = getFavTags(prefs, getApplicationContext());
+    private void addTagsFavInformation() {
+        Set<String> favTags = getFavTags(getApplicationContext());
         MultiSelectListPreference selectListPreference = (MultiSelectListPreference) findPreference("pref-fav-tags-list");
 
         Set<String> tagsSet = KissApplication.getApplication(this)
