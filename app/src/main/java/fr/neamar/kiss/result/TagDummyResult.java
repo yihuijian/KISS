@@ -64,14 +64,34 @@ public class TagDummyResult extends Result {
         paint.setColor(0xFFffffff);
         canvas.drawRoundRect(rectF, width / 2.4f, height / 2.4f, paint);
 
-        // write text with "transparent" (create a hole in the background)
-        paint.setColor(0);
-        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        int codepoint = pojo.getName().codePointAt(0);
+        // If the codepoint glyph is an image we can't use SRC_IN to draw it.
+        boolean drawAsHole = true;
+        Character.UnicodeBlock block = null;
+        try {
+            block = Character.UnicodeBlock.of(codepoint);
+        } catch (IllegalArgumentException ignored) {
+        }
+        if (block == null)
+            drawAsHole = false;
+        else if ("EMOTICONS".equals(block.toString()))
+            drawAsHole = false;
+        else if ("MISCELLANEOUS_SYMBOLS_AND_PICTOGRAPHS".equals(block.toString()))
+            drawAsHole = false;
+        String glyph = new String(Character.toChars(codepoint));
+        // we can't draw images (emoticons and symbols) using SRC_IN with transparent color, the result is a square
+        if (drawAsHole) {
+            // write text with "transparent" (create a hole in the background)
+            paint.setColor(0);
+            paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        } else {
+            paint.setColor(0xFFffffff);
+        }
 
         // draw the letter in the center
         Rect b = new Rect();
-        paint.getTextBounds(pojo.getName(), 0, 1, b);
-        canvas.drawText(pojo.getName(), 0, 1, width / 2.f - b.centerX(), height / 2.f - b.centerY(), paint);
+        paint.getTextBounds(glyph, 0, glyph.length(), b);
+        canvas.drawText(glyph, 0, glyph.length(), width / 2.f - b.centerX(), height / 2.f - b.centerY(), paint);
 
 //        rectF.set(b);
 //        rectF.offset(width / 2.f - rectF.centerX(), height / 2.f - rectF.centerY());
