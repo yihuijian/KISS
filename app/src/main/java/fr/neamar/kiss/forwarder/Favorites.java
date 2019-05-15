@@ -17,7 +17,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -28,7 +27,6 @@ import fr.neamar.kiss.db.DBHelper;
 import fr.neamar.kiss.pojo.Pojo;
 import fr.neamar.kiss.result.ContactsResult;
 import fr.neamar.kiss.result.Result;
-import fr.neamar.kiss.result.TagDummyResult;
 import fr.neamar.kiss.ui.ListPopup;
 import fr.neamar.kiss.ui.RoundedQuickContactBadge;
 
